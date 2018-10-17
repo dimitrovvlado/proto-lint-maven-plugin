@@ -1,0 +1,29 @@
+bin/
+build/
+dist/
+target/
+!.mvn/wrapper/maven-wrapper.jar
+1
+requirements.lock
+services/**/charts/*.tgz
+*.patch
+.angulardoc.json
+.java-version
+
+### VSCODE ###
+.vscode
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+.DS_Store
