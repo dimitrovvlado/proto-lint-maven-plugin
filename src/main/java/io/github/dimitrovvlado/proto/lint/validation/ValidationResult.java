@@ -2,19 +2,23 @@ package io.github.dimitrovvlado.proto.lint.validation;
 
 import org.apache.maven.plugin.logging.Log;
 
-//TODO javadoc
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Validation result returned by the different {@link Validator} implementations.
+ */
 public class ValidationResult {
 
     public enum Severity {
-        DEBUG, ERROR
+        WARN, ERROR
     }
 
     private final Severity severity;
     private final String message;
 
     public ValidationResult(Severity severity, String message) {
-        this.severity = severity;
-        this.message = message;
+        this.severity = checkNotNull(severity);
+        this.message = checkNotNull(message);
     }
 
     public Severity getSeverity() {
@@ -29,7 +33,7 @@ public class ValidationResult {
      * @return number of validation errors.
      */
     public int apply(Log log) {
-        if (Severity.DEBUG.equals(severity)) {
+        if (Severity.WARN.equals(severity)) {
             if (log.isDebugEnabled()) {
                 log.debug(message);
             }

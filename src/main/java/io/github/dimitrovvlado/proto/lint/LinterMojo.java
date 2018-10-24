@@ -101,7 +101,7 @@ public class LinterMojo extends AbstractMojo {
         return protos;
     }
 
-    private boolean skipLinting() {
+    boolean skipLinting() {
         final String packaging = session.getCurrentProject().getPackaging();
         if ("pom".equalsIgnoreCase(packaging)) {
             getLog().info("Project packaging is " + packaging);

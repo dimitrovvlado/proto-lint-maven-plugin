@@ -4,10 +4,12 @@ package io.github.dimitrovvlado.proto.lint;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class LinterMojoTest {
     @Rule
@@ -66,6 +68,20 @@ public class LinterMojoTest {
         File[] protoFiles = (File[])rule.getVariableValueFromObject(linterMojo, "protoFiles");
         assertNotNull(protoFiles);
         assertEquals(0, protoFiles.length);
+    }
+
+    @Test
+    public void testProjectWithPomPackaging() throws Exception {
+        File projectDirectory = new File("target/test-classes/project-with-pom-packaging/");
+        assertNotNull(projectDirectory);
+        assertTrue(projectDirectory.exists());
+
+        LinterMojo linterMojo = spy((LinterMojo)rule.lookupConfiguredMojo(projectDirectory, "lint"));
+        assertNotNull(linterMojo);
+        linterMojo.execute();
+
+        verify(linterMojo, times(1)).skipLinting();
+        verify(linterMojo).skipLinting();
     }
 }
 
