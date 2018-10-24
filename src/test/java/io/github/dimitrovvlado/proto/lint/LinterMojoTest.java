@@ -7,8 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LinterMojoTest {
     @Rule
@@ -32,10 +31,10 @@ public class LinterMojoTest {
         assertNotNull(linterMojo);
         linterMojo.execute();
 
-//        File outputDirectory = (File) rule.getVariableValueFromObject(linterMojo, "outputDirectory");
-//        assertNotNull(outputDirectory);
-//        assertTrue(outputDirectory.exists());
-
+        File[] protoFiles = (File[]) rule.getVariableValueFromObject(linterMojo, "protoFiles");
+        assertNotNull(protoFiles);
+        assertEquals(1, protoFiles.length);
+        assertTrue(protoFiles[0].exists());
     }
 
     @Test
@@ -48,10 +47,25 @@ public class LinterMojoTest {
         assertNotNull(linterMojo);
         linterMojo.execute();
 
-//        File outputDirectory = (File) rule.getVariableValueFromObject(linterMojo, "outputDirectory");
-//        assertNotNull(outputDirectory);
-//        assertTrue(outputDirectory.exists());
+        File protoDirectory = (File) rule.getVariableValueFromObject(linterMojo, "protoDirectory");
+        assertNotNull(protoDirectory);
+        assertTrue(protoDirectory.exists());
+    }
 
+    @Test
+    public void testProjectWithDefaultProtoDirectory() throws Exception {
+        File projectDirectory = new File("target/test-classes/project-with-default-directory/");
+        assertNotNull(projectDirectory);
+        assertTrue(projectDirectory.exists());
+
+        LinterMojo linterMojo = (LinterMojo) rule.lookupConfiguredMojo(projectDirectory, "lint");
+        assertNotNull(linterMojo);
+        linterMojo.execute();
+
+        assertNull(rule.getVariableValueFromObject(linterMojo, "protoDirectory"));
+        File[] protoFiles = (File[])rule.getVariableValueFromObject(linterMojo, "protoFiles");
+        assertNotNull(protoFiles);
+        assertEquals(0, protoFiles.length);
     }
 }
 

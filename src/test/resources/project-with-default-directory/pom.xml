@@ -14,9 +14,6 @@
             <plugin>
                 <groupId>io.github.dimitrovvlado</groupId>
                 <artifactId>proto-lint-maven-plugin</artifactId>
-                <configuration>
-                    <protoDirectory>src/main/proto/</protoDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>
