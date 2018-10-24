@@ -1,47 +1,57 @@
 package io.github.dimitrovvlado.proto.lint.validation;
 
-import com.squareup.wire.schema.Location;
-import com.squareup.wire.schema.internal.parser.ProtoFileElement;
-import com.squareup.wire.schema.internal.parser.ProtoParser;
-import okio.Okio;
-import okio.Source;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class MessagesValidatorTest {
-
-    private MessagesValidator validator;
-
-    @Before
-    public void setup() {
-        validator = new MessagesValidator();
-    }
+public class MessagesValidatorTest extends AbstractValidatorTest {
 
     @Test
     public void testValidMessages() throws Exception {
-        List<ValidationResult> result = validator.validate(protoFile("/valid.proto"));
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/valid.proto"));
         assertNotNull(result);
         assertEquals(0, result.size());
     }
 
-    private ProtoFileElement protoFile(String fileName) throws Exception {
-        URL url = MessagesValidatorTest.class.getResource(fileName);
-        Path path = Paths.get(url.toURI());
-        try (Source source = Okio.source(path)) {
-            Location location = Location.get(path.toFile().getAbsolutePath());
-            String data = Okio.buffer(source).readUtf8();
-            return ProtoParser.parse(location, data);
-        } catch (IOException e) {
-            throw new IOException("Failed to load " + fileName, e);
-        }
+    @Test
+    public void testInvalidMessageNames() throws Exception {
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidMessage.proto"));
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertThat(result, contains(
+                hasProperty("message", is("Message name 'createOrUpdateExampleRequest' is not in upper camel case.")),
+                hasProperty("message", is("Message name 'create_or_update_example_response' is not in upper camel case."))
+        ));
     }
+
+    @Test
+    public void testInvalidFieldNames() throws Exception {
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidFields.proto"));
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertThat(result, contains(
+                hasProperty("message", is("Field name 'exampleId' in message 'CreateOrUpdateExampleRequest' is not in lower underscore case.")),
+                hasProperty("message", is("Field name 'ExampleId' in message 'CreateOrUpdateExampleResponse' is not in lower underscore case."))
+        ));
+    }
+
+    @Test
+    public void testInvaliEnum() throws Exception {
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidEnum.proto"));
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertThat(result, contains(
+                hasProperty("message", is("Message name 'color' is not in upper camel case.")),
+                hasProperty("message", is("Constant name 'Red' in message 'color' is not in upper underscore case.")),
+                hasProperty("message", is("Constant name 'blue' in message 'color' is not in upper underscore case."))
+        ));
+    }
+
 }

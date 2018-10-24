@@ -3,12 +3,12 @@ package io.github.dimitrovvlado.proto.lint;
 
 import org.apache.maven.plugin.testing.MojoRule;
 import org.junit.Rule;
-
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class LinterMojoTest {
     @Rule
@@ -24,11 +24,11 @@ public class LinterMojoTest {
 
     @Test
     public void testProjectWithSingleProtoFile() throws Exception {
-        File pom = new File("target/test-classes/project-with-single-proto/");
-        assertNotNull(pom);
-        assertTrue(pom.exists());
+        File projectDirectory = new File("target/test-classes/project-with-single-proto/");
+        assertNotNull(projectDirectory);
+        assertTrue(projectDirectory.exists());
 
-        LinterMojo linterMojo = (LinterMojo) rule.lookupConfiguredMojo(pom, "lint");
+        LinterMojo linterMojo = (LinterMojo) rule.lookupConfiguredMojo(projectDirectory, "lint");
         assertNotNull(linterMojo);
         linterMojo.execute();
 
@@ -38,5 +38,20 @@ public class LinterMojoTest {
 
     }
 
+    @Test
+    public void testProjectWithSingleProtoDirectory() throws Exception {
+        File projectDirectory = new File("target/test-classes/project-with-proto-directory/");
+        assertNotNull(projectDirectory);
+        assertTrue(projectDirectory.exists());
+
+        LinterMojo linterMojo = (LinterMojo) rule.lookupConfiguredMojo(projectDirectory, "lint");
+        assertNotNull(linterMojo);
+        linterMojo.execute();
+
+//        File outputDirectory = (File) rule.getVariableValueFromObject(linterMojo, "outputDirectory");
+//        assertNotNull(outputDirectory);
+//        assertTrue(outputDirectory.exists());
+
+    }
 }
 

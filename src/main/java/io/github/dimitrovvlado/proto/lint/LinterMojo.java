@@ -14,10 +14,18 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Goal which executes the lint.
@@ -28,14 +36,14 @@ public class LinterMojo extends AbstractMojo {
     @Component(role = MavenSession.class)
     protected MavenSession session;
 
-    @Parameter(defaultValue = "${project.basedir}", property = "basedir", required = true)
+    @Parameter(property = "basedir", defaultValue = "${project.basedir}", required = true)
     protected File basedir;
 
     @Parameter(property = "protoFiles")
-    protected String[] protoFiles;
+    protected File[] protoFiles;
 
     @Parameter(property = "protoDirectory")
-    private String protoDirectory;
+    private File protoDirectory;
 
     private ValidatorService validator;
 
@@ -69,17 +77,28 @@ public class LinterMojo extends AbstractMojo {
         }
     }
 
-    private Collection<File> resolveFiles() {
-        System.out.println("BASEDIR: " + basedir);
-        //TODO not handling folders
-        return Arrays.stream(protoFiles).map(n -> new File(basedir, n)).filter(f -> {
-            if (!f.exists()) {
-                //TODO Break build instead of printing an error
-                getLog().error("File not found: " + f.getName());
-                return false;
+    private Collection<File> resolveFiles() throws MojoExecutionException {
+        List<File> protos = new LinkedList<>();
+        if ((protoFiles == null || protoFiles.length == 0) && protoDirectory == null) {
+            File srcDir = new File(basedir, "src");
+            if (srcDir.exists() && srcDir.isDirectory()) {
+                protos.addAll(walkDirectory(srcDir));
+            } else {
+                getLog().warn("Src directory does not exist or is not a folder");
             }
-            return true;
-        }).collect(Collectors.toList());
+        } else {
+            if (protoFiles != null) {
+                protos.addAll(Arrays.asList(protoFiles));
+            }
+            if (protoDirectory != null) {
+                if (!protoDirectory.exists() || !protoDirectory.isDirectory()) {
+                    throw new MojoExecutionException("'" + protoDirectory.getName() +
+                            "' does not exist or is not a directory");
+                }
+                protos.addAll(walkDirectory(protoDirectory));
+            }
+        }
+        return protos;
     }
 
     private boolean skipLinting() {
@@ -89,5 +108,26 @@ public class LinterMojo extends AbstractMojo {
             return true;
         }
         return false;
+    }
+
+    private Collection<File> walkDirectory(File protoDirectory) throws MojoExecutionException {
+        try (Stream<Path> paths = Files.walk(protoDirectory.toPath())) {
+            return paths.
+                    filter(path -> path.toFile().exists() && getFileExtension(path).equalsIgnoreCase("proto")).
+                    map(Path::toFile).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Error traversing " + protoDirectory.getName(), e);
+        }
+    }
+
+    private String getFileExtension(Path path) {
+        Path name = path.getFileName();
+        // null for empty paths and root-only paths
+        if (name == null) {
+            return "";
+        }
+        String fileName = name.toString();
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
     }
 }

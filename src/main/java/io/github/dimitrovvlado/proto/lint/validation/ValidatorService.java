@@ -23,6 +23,7 @@ public class ValidatorService {
 
     public static ValidatorService getInstance() {
         INSTANCE.addValidator(new MessagesValidator());
+        INSTANCE.addValidator(new ServicesValidator());
         return INSTANCE;
     }
 
