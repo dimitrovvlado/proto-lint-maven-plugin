@@ -1,5 +1,7 @@
 # proto-lint-maven-plugin
 
+[![Travis CI](https://travis-ci.org/dimitrovvlado/proto-lint-maven-plugin.svg?branch=master)](https://github.com/dimitrovvlado/proto-lint-maven-plugin)
+
 A maven linter plugin for .proto files
 
 ## Dependencies
