@@ -1,6 +1,7 @@
 # proto-lint-maven-plugin
 
 [![Travis CI](https://travis-ci.org/dimitrovvlado/proto-lint-maven-plugin.svg?branch=master)](https://github.com/dimitrovvlado/proto-lint-maven-plugin)
+[![codecov](https://codecov.io/gh/dimitrovvlado/proto-lint-maven-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/dimitrovvlado/proto-lint-maven-plugin)
 
 A maven linter plugin for .proto files
 
