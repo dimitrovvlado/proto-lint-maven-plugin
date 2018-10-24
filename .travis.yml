@@ -1,0 +1,19 @@
+sudo: required
+
+services:
+  - docker
+
+language: java
+
+matrix:
+  include:
+    - jdk: openjdk8
+
+branches:
+  only:
+    - master
+
+before_install:
+  - docker version
+
+script: mvn clean verify -B
