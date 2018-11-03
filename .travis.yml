@@ -1,22 +1,19 @@
 sudo: required
-
 services:
   - docker
-
 language: java
-
+notifications:
+    email: true
 matrix:
   include:
     - jdk: openjdk8
-
-branches:
-  only:
-    - master
-
 before_install:
   - docker version
-
-script: mvn clean verify -B
-
+script: mvn clean package -B
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+deploy:
+  provider: script
+  script: mvn --settings sonatype-settings.xml -DskipTests -B deploy
+  on:
+    tags: true
