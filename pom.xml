@@ -9,6 +9,9 @@
     <artifactId>proto-lint-maven-plugin</artifactId>
     <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
+    <name>proto-lint-maven-plugin</name>
+    <description>A maven plugin for linting of gRPC proto files</description>
+    <url>https://github.com/dimitrovvlado/proto-lint-maven-plugin</url>
 
     <prerequisites>
         <maven>${maven.version}</maven>
@@ -32,6 +35,21 @@
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
     </properties>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/dimitrovvlado/proto-lint-maven-plugin</connection>
+        <developerConnection>scm:git:git@github.com:dimitrovvlado/proto-lint-maven-plugin</developerConnection>
+        <url>https://github.com/dimitrovvlado/proto-lint-maven-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -41,9 +59,8 @@
 
     <developers>
         <developer>
-            <id>dimitrov.vlado</id>
             <name>Vladimir Dimitrov</name>
-            <email>dimitrov.vlado@gmail.com</email>
+            <email>dimitrovvlado@users.noreply.github.com</email>
         </developer>
     </developers>
 

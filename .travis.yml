@@ -14,6 +14,8 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script: mvn --settings sonatype-settings.xml -DskipTests -B deploy
+  script:
+    - echo ${GPG_SECRET_KEY} | base64 --decode | gpg --batch --import
+    - mvn deploy --settings sonatype-settings.xml -DskipTests=true -Psign-artifacts -Dgpg.passphrase=${GPG_PASSPHRASE} -B
   on:
     tags: true
