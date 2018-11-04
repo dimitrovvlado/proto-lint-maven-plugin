@@ -9,6 +9,7 @@ services/**/charts/*.tgz
 *.patch
 .angulardoc.json
 .java-version
+dependency-reduced-pom.xml
 
 ### VSCODE ###
 .vscode
