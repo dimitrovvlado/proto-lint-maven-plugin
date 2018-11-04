@@ -15,7 +15,9 @@ after_success:
 deploy:
   provider: script
   script:
+    - echo 'Configuring GPG...'
     - echo ${GPG_SECRET_KEY} | base64 --decode | gpg --batch --import
     - mvn deploy --settings sonatype-settings.xml -DskipTests=true -Psign-artifacts -Dgpg.passphrase=${GPG_PASSPHRASE} -B
+  skip_cleanup: true
   on:
     tags: true
