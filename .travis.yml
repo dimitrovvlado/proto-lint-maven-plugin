@@ -14,11 +14,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script:
-    - gpg --version
-    - apt-get update
-    - echo ${GPG_SECRET_KEY} | base64 --decode | gpg --batch --import
-    - mvn deploy --settings sonatype-settings.xml -DskipTests=true -Psign-artifacts -Dgpg.passphrase=${GPG_PASSPHRASE} -B
+  script: bash deploy.sh
   skip_cleanup: true
   on:
     tags: true
