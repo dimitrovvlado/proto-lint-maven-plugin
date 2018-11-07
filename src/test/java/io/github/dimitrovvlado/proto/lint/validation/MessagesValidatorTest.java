@@ -35,10 +35,11 @@ public class MessagesValidatorTest extends AbstractValidatorTest {
     public void testInvalidFieldNames() throws Exception {
         List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidFields.proto"));
         assertNotNull(result);
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
         assertThat(result, contains(
                 hasProperty("message", is("Field name 'exampleId' in message 'CreateOrUpdateExampleRequest' is not in lower underscore case.")),
-                hasProperty("message", is("Field name 'ExampleId' in message 'CreateOrUpdateExampleResponse' is not in lower underscore case."))
+                hasProperty("message", is("Field name 'ExampleId' in message 'CreateOrUpdateExampleResponse' is not in lower underscore case.")),
+                hasProperty("message", is("Field name 'total_Count' in message 'CreateOrUpdateExampleResponse' is not in lower underscore case."))
         ));
     }
 
@@ -46,11 +47,12 @@ public class MessagesValidatorTest extends AbstractValidatorTest {
     public void testInvaliEnum() throws Exception {
         List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidEnum.proto"));
         assertNotNull(result);
-        assertEquals(3, result.size());
+        assertEquals(4, result.size());
         assertThat(result, contains(
                 hasProperty("message", is("Message name 'color' is not in upper camel case.")),
                 hasProperty("message", is("Constant name 'Red' in message 'color' is not in upper underscore case.")),
-                hasProperty("message", is("Constant name 'blue' in message 'color' is not in upper underscore case."))
+                hasProperty("message", is("Constant name 'blue' in message 'color' is not in upper underscore case.")),
+                hasProperty("message", is("Constant name 'DARK-GREEN' in message 'color' is not in upper underscore case."))
         ));
     }
 

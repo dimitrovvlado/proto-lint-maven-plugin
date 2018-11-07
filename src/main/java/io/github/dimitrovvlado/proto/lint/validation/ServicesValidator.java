@@ -1,12 +1,13 @@
 package io.github.dimitrovvlado.proto.lint.validation;
 
-import com.google.common.base.CaseFormat;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import com.squareup.wire.schema.internal.parser.RpcElement;
 import com.squareup.wire.schema.internal.parser.ServiceElement;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static io.github.dimitrovvlado.proto.lint.validation.CaseFormat.getCase;
 
 public class ServicesValidator implements Validator  {
 

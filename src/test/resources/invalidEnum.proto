@@ -21,4 +21,5 @@ message CreateOrUpdateExampleResponse {
 enum color {
     Red = 0;
     blue = 1;
+    DARK-GREEN = 2;
 }

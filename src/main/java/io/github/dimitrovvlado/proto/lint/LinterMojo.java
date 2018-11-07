@@ -75,6 +75,7 @@ public class LinterMojo extends AbstractMojo {
         if (errorCount > 0) {
             throw new MojoExecutionException(errorCount + " errors encountered.");
         }
+        getLog().info("Successfully verified " + files.size() + " file(s).");
     }
 
     private Collection<File> resolveFiles() throws MojoExecutionException {

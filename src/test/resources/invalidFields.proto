@@ -16,6 +16,7 @@ message CreateOrUpdateExampleRequest {
 
 message CreateOrUpdateExampleResponse {
     string ExampleId = 1;
+    int32 total_Count = 2;
 }
 
 enum Color {

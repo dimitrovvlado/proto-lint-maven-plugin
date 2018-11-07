@@ -16,7 +16,7 @@ Add a plugin declaration to your project's pom file as follows:
       <plugin>
         <groupId>io.github.dimitrovvlado</groupId>
         <artifactId>proto-lint-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <executions>
           <execution>
             <goals>
