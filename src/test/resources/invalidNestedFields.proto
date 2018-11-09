@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package example;
+
+option java_multiple_files = true;
+option java_package = "com.example.rpc";
+option java_outer_classname = "ExampleProto";
+
+service ExampleService {
+    rpc CreateOrUpdateExample(CreateOrUpdateExampleRequest) returns (CreateOrUpdateExampleResponse);
+}
+
+message CreateOrUpdateExampleRequest {
+    message InnerRequestData {
+        string exampleId = 1;
+        message InnerInnerRequestData {
+            string exampleString = 1;
+        }
+    }
+
+    enum Color {
+        red = 0;
+    }
+}
+
+message CreateOrUpdateExampleResponse {
+    message InnerResponseData {
+        string ExampleId = 1;
+        int32 total_Count = 2;
+    }
+}

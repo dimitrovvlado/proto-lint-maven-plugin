@@ -9,26 +9,33 @@ import okio.Source;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//TODO javadoc
+/**
+ * A facade for invoking all the validators
+ */
 public class ValidatorService {
 
-    private Set<Validator> validators = new HashSet<>();
+    private Map<String, Validator> validators = new HashMap<>();
 
     private static ValidatorService INSTANCE = new ValidatorService();
 
+    static {
+        INSTANCE.addValidator("messages", new MessagesValidator());
+        INSTANCE.addValidator("services", new ServicesValidator());
+    }
+
     public static ValidatorService getInstance() {
-        INSTANCE.addValidator(new MessagesValidator());
-        INSTANCE.addValidator(new ServicesValidator());
         return INSTANCE;
     }
 
-    public void addValidator(Validator validator) {
-        validators.add(validator);
+    public void addValidator(String name, Validator validator) {
+        validators.put(name, validator);
     }
 
     public List<ValidationResult> apply(File file) throws IOException {
@@ -36,7 +43,10 @@ public class ValidatorService {
             Location location = Location.get(file.getAbsolutePath());
             String data = Okio.buffer(source).readUtf8();
             ProtoFileElement protoFile = ProtoParser.parse(location, data);
-            return validators.stream().map(v -> v.validate(protoFile)).flatMap(Collection::stream).collect(Collectors.toList());
+            return validators.entrySet().stream().
+                    map(v -> v.getValue().validate(protoFile)).
+                    flatMap(Collection::stream).
+                    collect(Collectors.toList());
         } catch (IOException e) {
             throw new IOException("Failed to load " + file, e);
         }

@@ -44,7 +44,7 @@ public class MessagesValidatorTest extends AbstractValidatorTest {
     }
 
     @Test
-    public void testInvaliEnum() throws Exception {
+    public void testInvalidEnum() throws Exception {
         List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidEnum.proto"));
         assertNotNull(result);
         assertEquals(4, result.size());
@@ -56,4 +56,29 @@ public class MessagesValidatorTest extends AbstractValidatorTest {
         ));
     }
 
+    @Test
+    public void testInvalidInnerFields() throws Exception {
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidNestedFields.proto"));
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        assertThat(result, contains(
+                hasProperty("message", is("Field name 'exampleId' in message 'InnerRequestData' is not in lower underscore case.")),
+                hasProperty("message", is("Constant name 'red' in message 'Color' is not in upper underscore case.")),
+                hasProperty("message", is("Field name 'exampleString' in message 'InnerInnerRequestData' is not in lower underscore case.")),
+                hasProperty("message", is("Field name 'ExampleId' in message 'InnerResponseData' is not in lower underscore case.")),
+                hasProperty("message", is("Field name 'total_Count' in message 'InnerResponseData' is not in lower underscore case."))
+        ));
+    }
+
+    @Test
+    public void testInvalidInnerMessageNames() throws Exception {
+        List<ValidationResult> result = messagesValidator.validate(protoFile("/invalidNestedMessages.proto"));
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertThat(result, contains(
+                hasProperty("message", is("Message name 'innerRequestData' is not in upper camel case.")),
+                hasProperty("message", is("Message name 'COLOR' is not in upper camel case.")),
+                hasProperty("message", is("Message name 'inner_response_Data' is not in upper camel case."))
+        ));
+    }
 }
