@@ -59,4 +59,9 @@ public class MessagesValidator implements Validator {
             }
         }
     }
+
+    @Override
+    public String getName() {
+        return "messagesValidator";
+    }
 }

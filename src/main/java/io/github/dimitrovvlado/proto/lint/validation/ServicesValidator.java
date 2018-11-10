@@ -28,4 +28,9 @@ public class ServicesValidator implements Validator  {
         }
         return result;
     }
+
+    @Override
+    public String getName() {
+        return "servicesValidator";
+    }
 }

@@ -4,7 +4,6 @@ package io.github.dimitrovvlado.proto.lint;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 

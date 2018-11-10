@@ -17,4 +17,10 @@ public interface Validator {
      */
     List<ValidationResult> validate(ProtoFileElement protoFile);
 
+    /**
+     * The name of the validator. Must be unique.
+     * @return the name of the validator, never null.
+     */
+    String getName();
+
 }

@@ -9,11 +9,10 @@ import okio.Source;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,21 +22,47 @@ public class ValidatorService {
 
     private Map<String, Validator> validators = new HashMap<>();
 
-    private static ValidatorService INSTANCE = new ValidatorService();
-
-    static {
-        INSTANCE.addValidator("messages", new MessagesValidator());
-        INSTANCE.addValidator("services", new ServicesValidator());
-    }
-
+    /**
+     * Constructs a {@link ValidatorService} instance with default set of validators
+     *
+     * @return a new ValidatorInstance
+     */
     public static ValidatorService getInstance() {
-        return INSTANCE;
+        ValidatorService instance = new ValidatorService();
+        instance.includeValidator(new MessagesValidator());
+        instance.includeValidator(new ServicesValidator());
+        return instance;
     }
 
-    public void addValidator(String name, Validator validator) {
-        validators.put(name, validator);
+    /**
+     * Includes a validator to the {@link ValidatorService}
+     *
+     * @param validator the {@link Validator} implementation to include.
+     */
+    public void includeValidator(Validator validator) {
+        validators.put(validator.getName(), validator);
     }
 
+    /**
+     * Exclude a validator from the {@link ValidatorService}. Useful for excluding default validations.
+     *
+     * @param name the name of the validator to exclude.
+     */
+    public void excludeValidator(String name) {
+        validators.remove(name);
+    }
+
+    public Map<String, Validator> getValidators() {
+        return Collections.unmodifiableMap(validators);
+    }
+
+    /**
+     * Applies all the validation rules on the provided .proto file.
+     *
+     * @param file the proto file to validate.
+     * @return a list of validation errors if any.
+     * @throws IOException if the provided validation file cannot be open,
+     */
     public List<ValidationResult> apply(File file) throws IOException {
         try (Source source = Okio.source(file)) {
             Location location = Location.get(file.getAbsolutePath());
