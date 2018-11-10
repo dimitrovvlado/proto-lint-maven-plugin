@@ -5,6 +5,11 @@
 
 A maven linter plugin for gRPC `.proto` files.
 
+This plug-in will check your project's `.proto` files for violations of Google's Protocol Buffer [Style Guide](https://developers.google.com/protocol-buffers/docs/style). By using this plug-in you are able to retrieve those compilation errors which are not reported by the protobuf compiler:
+* Message and field names
+* Enums
+* Service and RPC names
+
 ## Usage
 
 Add a plugin declaration to your project's pom file as follows:
@@ -16,7 +21,7 @@ Add a plugin declaration to your project's pom file as follows:
       <plugin>
         <groupId>io.github.dimitrovvlado</groupId>
         <artifactId>proto-lint-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <executions>
           <execution>
             <goals>
