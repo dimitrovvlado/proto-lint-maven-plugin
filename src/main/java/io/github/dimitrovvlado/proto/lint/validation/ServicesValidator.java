@@ -22,7 +22,7 @@ public class ServicesValidator implements Validator  {
             for (RpcElement rpc : serviceElement.rpcs()) {
                 if (!CaseFormat.UPPER_CAMEL.equals(getCase(rpc.name()))) {
                     result.add(new ValidationResult(ValidationResult.Severity.ERROR,
-                            String.format("RPC name '%s' in service '%s' is not in upper camel case.", serviceElement.name(), rpc.name())));
+                            String.format("RPC name '%s' in service '%s' is not in upper camel case.", rpc.name(), serviceElement.name())));
                 }
             }
         }
